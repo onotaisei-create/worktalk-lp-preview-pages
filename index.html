@@ -5,11 +5,16 @@
 <title>worktalk LP プレビュー</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-  body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background:#f4f6fa;color:#222;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:24px;box-sizing:border-box;}
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background:#f4f6fa;color:#222;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:24px;}
   .card{background:#fff;border-radius:16px;box-shadow:0 8px 24px -8px rgba(0,40,100,.18);padding:36px 32px;max-width:520px;width:100%;}
   h1{margin:0 0 8px;font-size:22px;color:#0068b7;}
-  p{color:#555;line-height:1.7;margin:0 0 24px;font-size:14px;}
-  .links{display:flex;gap:14px;flex-wrap:wrap;}
+  p{color:#555;line-height:1.7;margin:0 0 20px;font-size:14px;}
+  input{width:100%;padding:11px 14px;border:1px solid #ddd;border-radius:8px;font-size:15px;}
+  button{width:100%;margin-top:10px;padding:12px;background:#0068b7;color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer;font-weight:600;}
+  button:hover{background:#004f8c;}
+  .err{color:#c41232;font-size:12px;margin-top:10px;min-height:16px;}
+  .links{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;}
   .links a{flex:1;min-width:140px;text-align:center;background:#0068b7;color:#fff;padding:14px 18px;border-radius:10px;text-decoration:none;font-weight:600;transition:background .15s;}
   .links a:hover{background:#004f8c;}
   .links a.sp{background:#c41232;}
@@ -18,9 +23,16 @@
 </style>
 </head>
 <body>
-<div class="card">
+<div id="gate" class="card">
+  <h1>プレビューアクセス</h1>
+  <p>パスワードを入力してください</p>
+  <input id="pw" type="password" autocomplete="off">
+  <button id="go">入る</button>
+  <div id="err" class="err"></div>
+</div>
+<div id="landing" class="card" hidden>
   <h1>worktalk LP プレビュー</h1>
-  <p>社内レビュー用のプレビューです。下のリンクからPC版とSP版を確認できます。</p>
+  <p>社内レビュー用のプレビューです。下のリンクから PC版 / SP版 を確認できます。</p>
   <div class="links">
     <a href="./pc.html">PC版を見る</a>
     <a href="./sp.html" class="sp">SP版を見る</a>
@@ -30,5 +42,25 @@
     CF7のお問い合わせフォームは本番WP環境でのみ実物が表示されます（プレビューではスタブ）。
   </div>
 </div>
+<script>
+(function(){
+  var K='wt_lp_auth_v1';
+  var EXP='eb6a2556d00a09b911656129292405c62d96af60fe601d9f51fc870ca7b2e1f1';
+  var gate=document.getElementById('gate');
+  var landing=document.getElementById('landing');
+  function showLanding(){ gate.hidden=true; landing.hidden=false; }
+  async function sha(s){ var b=new TextEncoder().encode(s); var r=await crypto.subtle.digest('SHA-256',b); return Array.from(new Uint8Array(r)).map(function(x){return x.toString(16).padStart(2,'0');}).join(''); }
+  if(sessionStorage.getItem(K)==='1'){ showLanding(); return; }
+  function go(){
+    sha(document.getElementById('pw').value).then(function(v){
+      if(v===EXP){ sessionStorage.setItem(K,'1'); showLanding(); }
+      else{ document.getElementById('err').textContent='パスワードが違います'; }
+    });
+  }
+  document.getElementById('go').onclick=go;
+  document.getElementById('pw').addEventListener('keydown',function(e){ if(e.key==='Enter') go(); });
+  document.getElementById('pw').focus();
+})();
+</script>
 </body>
 </html>
