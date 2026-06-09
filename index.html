@@ -34,12 +34,12 @@
   <h1>worktalk LP プレビュー</h1>
   <p>社内レビュー用のプレビューです。下のリンクから PC版 / SP版 を確認できます。</p>
   <div class="links">
-    <a href="./pc.html">PC版を見る</a>
-    <a href="./sp.html" class="sp">SP版を見る</a>
+    <a href="./pc.html?view=pc">PC版を見る</a>
+    <a href="./sp.html?view=sp" class="sp">SP版を見る</a>
   </div>
   <div class="note">
-    ブラウザ幅を 768px 未満に縮めると自動でSP版に切り替わります（その逆も）。<br>
-    PC版は 1440px 固定幅、狭めると横スクロールになります（要素は動かない設計）。<br>
+    URLにパラメータが無い場合、ブラウザ幅 768px 未満で自動SP / 以上で自動PCになります。<br>
+    リンク経由で開いた場合（?view=...付き）は自動切替を無効化し、選んだ方を表示します。<br>
     CF7のお問い合わせフォームは本番WP環境でのみ実物が表示されます（プレビューではスタブ）。
   </div>
 </div>
